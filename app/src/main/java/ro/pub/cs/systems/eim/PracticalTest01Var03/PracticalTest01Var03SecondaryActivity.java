@@ -2,10 +2,16 @@ package ro.pub.cs.systems.eim.PracticalTest01Var03;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+
+
 
 public class PracticalTest01Var03SecondaryActivity extends AppCompatActivity {
 
@@ -13,6 +19,9 @@ public class PracticalTest01Var03SecondaryActivity extends AppCompatActivity {
     Button incorrectButton;
 
     TextView result;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,4 +50,6 @@ public class PracticalTest01Var03SecondaryActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

@@ -2,8 +2,12 @@ package ro.pub.cs.systems.eim.PracticalTest01Var03;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,6 +23,17 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
     EditText number2;
 
     TextView result;
+
+    private class MessageBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("[Received Broadcast]", "Received broadcast");
+            Log.d("[Received Broadcast]", intent.getStringExtra("message"));
+        }
+    }
+
+    private MessageBroadcastReceiver messageBroadcastReceiver = new MessageBroadcastReceiver();
+    private IntentFilter intentFilter = new IntentFilter();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +58,7 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 return;
             }
 
+            startPracticalService();
             Integer left = Integer.parseInt(number1.getText().toString());
             Integer right = Integer.parseInt(number2.getText().toString());
             result.setText(number1.getText().toString() + " + " + number2.getText().toString() + " = " + String.valueOf(left + right));
@@ -58,6 +74,7 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 return;
             }
 
+            startPracticalService();
             Integer left = Integer.parseInt(number1.getText().toString());
             Integer right = Integer.parseInt(number2.getText().toString());
             result.setText(number1.getText().toString() + " - " + number2.getText().toString() + " = " + String.valueOf(left - right));
@@ -112,6 +129,33 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Returned from secondary activity with NOT OK", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        intentFilter.addAction("ro.pub.cs.systems.eim.PracticalTest01Var03.sum");
+        registerReceiver(messageBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(messageBroadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent(getApplicationContext(), PracticalTest01Var03Service.class);
+        getApplicationContext().stopService(intent);
+    }
+
+    private void startPracticalService() {
+            Intent intent = new Intent(getApplicationContext(), PracticalTest01Var03Service.class);
+            intent.putExtra("nr1", Integer.parseInt(number1.getText().toString()));
+            intent.putExtra("nr2", Integer.parseInt(number2.getText().toString()));
+            getApplicationContext().startService(intent);
     }
 }
 
