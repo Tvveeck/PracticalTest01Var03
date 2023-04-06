@@ -2,6 +2,7 @@ package ro.pub.cs.systems.eim.PracticalTest01Var03;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +62,12 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
             Integer right = Integer.parseInt(number2.getText().toString());
             result.setText(number1.getText().toString() + " - " + number2.getText().toString() + " = " + String.valueOf(left - right));
         });
+
+        navigateButton.setOnClickListener(it -> {
+            Intent intent = new Intent(this, PracticalTest01Var03SecondaryActivity.class);
+            intent.putExtra("result", result.getText().toString());
+            startActivityForResult(intent, 1);
+        });
     }
 
     @Override
@@ -93,5 +100,18 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
         Toast.makeText(this, got, Toast.LENGTH_LONG).show();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                Toast.makeText(this, "Returned from secondary activity with OK", Toast.LENGTH_LONG).show();
+            }
+            else if(resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "Returned from secondary activity with NOT OK", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
 
